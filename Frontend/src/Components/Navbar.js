@@ -28,9 +28,10 @@ const Navbar = ({ user, setUser }) => {
       <div className="links">
         {user ? (
           <>
+            <Link to="/home">Home</Link>
             <Link to="/product">Product</Link>
             <Link to="/cart">Cart</Link>
-            <Link to="/order">Order</Link>
+            {/* <Link to="/order">Order</Link> */}
             <div className="user-icon" onClick={toggleDropdown}>
               <FaUser />
               {isDropdownOpen && (

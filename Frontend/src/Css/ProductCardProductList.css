@@ -38,43 +38,12 @@
   font-size: 16px;
   margin-top: 20px;
   transition: background-color 0.3s ease;
-  margin-bottom: 20px; /* Add margin at the bottom to create space between buttons */
-  display: block; /* Make the button a block element */
-  margin-left: auto; /* Center align the button */
-  margin-right: auto; /* Center align the button */
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .add-to-cart-button:hover {
   background-color: #45a049;
 }
-
-/* Toast */
-/*
-.add-to-cart-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1.5;
-  position: absolute;
-  top: 100px;
-  right: 10px;
-  width: 200px;
-  height: 45px;
-  background-color: #2676b4;
-  color: rgb(128, 43, 218) rgb(255, 0, 60);
-  padding: 5px;
-  text-align: center;
-  border-radius: 0 0 10px 0;
-} */
-
-/* To create a triangle shape at the bottom of the toast */
-/* .toast:after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  right: 50%;
-  margin-right: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #4caf50 transparent transparent transparent;
-} */

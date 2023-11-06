@@ -25,6 +25,7 @@ const Cart = ({ cartItems, onIncrease, onDecrease, onRemove, user }) => {
           flag = false;
         }
         console.log(flag);
+        flag = true;
         if (flag === true) {
           navigate("/order");
         } else {

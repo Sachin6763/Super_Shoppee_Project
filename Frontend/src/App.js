@@ -16,6 +16,7 @@ import Order from "./Components/Order";
 import Cart from "./Components/Cart";
 // import Payment from "./Components/Payment";
 import InteractiveBackground from "./Components/InteractiveBackground";
+import Payment from "./Components/Payment";
 // import OrderSummary from "./Components/OrderSummary";
 
 // import productArray from "./LocalStorage/products";
@@ -307,7 +308,7 @@ export default function App() {
             path="/order"
             element={<Order onSubmit={handleAddressSubmit} user={user} />}
           />
-          {/* <Route path="/payment" element={<Payment />} /> */}
+          <Route path="/payment" element={<Payment />} />
         </Routes>
       </div>
       {/* <InteractiveBackground /> */}

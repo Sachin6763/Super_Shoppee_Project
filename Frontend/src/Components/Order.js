@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "../Css/Order.css"; // Import the CSS file for styling
+import { useNavigate } from "react-router-dom";
 
 const Order = ({ onSubmit, user }) => {
+  const naviget = useNavigate();
   const [address, setAddress] = useState({
     UserID: user,
     StreetAddress: "",
@@ -17,6 +19,7 @@ const Order = ({ onSubmit, user }) => {
 
     // Call the parent component's onSubmit function with the address data
     onSubmit(address);
+    naviget("/payment");
   };
 
   return (
