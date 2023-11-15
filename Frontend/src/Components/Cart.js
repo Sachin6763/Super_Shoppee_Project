@@ -26,11 +26,11 @@ const Cart = ({ cartItems, onIncrease, onDecrease, onRemove, user }) => {
         }
         console.log(flag);
         flag = true;
-        if (flag === true) {
-          navigate("/order");
-        } else {
-          navigate("/payment");
-        }
+        // if (flag === true) {
+        //   navigate("/order");
+        // } else {
+        navigate("/payment");
+        // }
       })
       .catch((error) => {
         // Handle network errors or other issues
@@ -45,18 +45,24 @@ const Cart = ({ cartItems, onIncrease, onDecrease, onRemove, user }) => {
   return (
     <div className="cart">
       <h2>Shopping Cart</h2>
-      {cartItems.map((item) => (
-        <CartItem
-          key={item.productID}
-          item={item}
-          onIncrease={onIncrease}
-          onDecrease={onDecrease}
-          onRemove={onRemove}
-        />
-      ))}
+      {cartItems &&
+        cartItems.map((item) => (
+          <CartItem
+            key={item.productID}
+            item={item}
+            onIncrease={onIncrease}
+            onDecrease={onDecrease}
+            onRemove={onRemove}
+          />
+        ))}
       <div className="total-price">Total Price: ${totalPrice.toFixed(2)}</div>
       {cartItems.length !== 0 && (
-        <button onClick={handleOrder} className="order-button">
+        <button
+          onClick={() => {
+            navigate("/order");
+          }}
+          className="order-button"
+        >
           Order Now
         </button>
       )}

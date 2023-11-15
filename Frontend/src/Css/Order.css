@@ -1,12 +1,16 @@
 /* Order.css */
 
 .order-form {
-  max-width: 400px;
+  /* max-width: 400px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 520px;
   margin: 30px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  /* background-color: #f9f9f9; */
+  /* border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
 }
 
 .order-form h2 {
@@ -17,12 +21,14 @@
 
 .order-form label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
-.order-form input[type="text"] {
+.input {
   width: 100%;
-  padding: 8px;
+  padding: 4px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;

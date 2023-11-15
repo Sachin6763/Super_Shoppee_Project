@@ -1,5 +1,5 @@
 import React from "react";
-import "../Css/CartCartItem.css"; // Import the cart item styles
+import "../Css/CartCartItem.css";
 
 const CartItem = ({ item, onIncrease, onDecrease, onRemove }) => {
   const { ProductId, ProductName, Price, Quantity } = item;

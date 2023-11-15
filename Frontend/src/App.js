@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 // import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -15,8 +15,9 @@ import ProductList from "./Components/ProductList";
 import Order from "./Components/Order";
 import Cart from "./Components/Cart";
 // import Payment from "./Components/Payment";
-import InteractiveBackground from "./Components/InteractiveBackground";
+// import InteractiveBackground from "./Components/InteractiveBackground";
 import Payment from "./Components/Payment";
+import PaymentForm from "./Components/PaymentForm";
 // import OrderSummary from "./Components/OrderSummary";
 
 // import productArray from "./LocalStorage/products";
@@ -32,6 +33,7 @@ export default function App() {
 
   const loggedIn = (userId) => {
     setUser(userId);
+    console.log("user " + userId);
     // Store user information in localStorage or sessionStorage when user logs in
     localStorage.setItem("user", JSON.stringify(userId));
   };
@@ -97,12 +99,12 @@ export default function App() {
         console.log(products);
       })
       .catch((error) => console.error("Error fetching products: ", error));
-  }, []);
+  }, [products]);
 
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    console.log("get" + user);
+    // console.log("get" + user);
     fetch(`http://localhost:4000/api/cartDetails/${user}`)
       .then((response) => response.json())
       .then((data) => {
@@ -111,7 +113,7 @@ export default function App() {
         console.log(cartItems.length + "1");
       })
       .catch((error) => console.log("Error fetching products : ", error));
-  }, [user]);
+  }, [cartItems]);
 
   const addToCart = (product, flag) => {
     // Make a request to addToCart API endpoint with the ProductID
@@ -131,19 +133,16 @@ export default function App() {
     // setCartItems(...cartItems, {product.ProductID, product.ProductName, product.Price, cartDetail.Quantity}) ;
 
     if (!productExistsInCart) {
+      console.log(product.ProductID + " " + user);
       fetch(`http://localhost:4000/api/addToCart/${product.ProductID}/${user}`)
         .then((response) => {
           if (response.ok) {
-            // Handle success response
             console.log("Item added to cart successfully.");
-            // You can update the cartItems state or perform other actions if needed
           } else {
-            // Handle error response
             throw new Error("Failed to add item to cart.");
           }
         })
         .catch((error) => {
-          // Handle network errors or other issues
           console.error("Error adding item to cart: ", error);
         });
     } else {
@@ -160,7 +159,6 @@ export default function App() {
           }
         })
         .catch((error) => {
-          // Handle network errors or other issues
           console.error("Error modifying item to cart: ", error);
         });
     }
@@ -197,11 +195,8 @@ export default function App() {
             }
           })
           .catch((error) => {
-            // Handle network errors or other issues
             console.error("Error modifying item to cart: ", error);
           });
-
-        // addToCardArray(updatedCartItems);
       }
     }
   };
@@ -222,7 +217,6 @@ export default function App() {
         }
       })
       .catch((error) => {
-        // Handle network errors or other issues
         console.error("Error int removing the item from cart: ", error);
       });
     // addToCardArray(updatedCartItems);
@@ -245,8 +239,7 @@ export default function App() {
 
   const handleAddressSubmit = (addressData) => {
     setAddress(addressData);
-    // Handle address form submission logic here
-    // You can send this addressData to the server or perform any other necessary actions
+
     fetch("http://localhost:4000/api/storeAddress/", {
       method: "POST",
       headers: {
@@ -304,11 +297,22 @@ export default function App() {
               />
             }
           />
-          <Route
+          {/* <Route
             path="/order"
             element={<Order onSubmit={handleAddressSubmit} user={user} />}
+          /> */}
+          <Route
+            path="/order"
+            element={
+              <PaymentForm
+                onSubmit={handleAddressSubmit}
+                user={user}
+                cartItems={cartItems}
+                setcartItems={setCartItems}
+              />
+            }
           />
-          <Route path="/payment" element={<Payment />} />
+          {/* <Route path="/payment" element={<Payment />} /> */}
         </Routes>
       </div>
       {/* <InteractiveBackground /> */}

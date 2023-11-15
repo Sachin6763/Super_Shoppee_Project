@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/LoginRegister.css";
-import "../Css/Toaster.css"; // Import the toaster styles
+import "../Css/Toaster.css";
 
 const Register = () => {
   const [UserID, setUserID] = useState("");

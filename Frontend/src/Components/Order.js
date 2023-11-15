@@ -2,34 +2,70 @@ import React, { useState } from "react";
 import "../Css/Order.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
 
-const Order = ({ onSubmit, user }) => {
-  const naviget = useNavigate();
-  const [address, setAddress] = useState({
-    UserID: user,
-    StreetAddress: "",
-    City: "",
-    State: "",
-    ZipCode: "",
-    Country: "",
-  });
+const Order = ({ address, setAddress, personalInfo, setpersonalInfo }) => {
+  // const naviget = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Perform validation or other logic here if needed
+  // let mobile = 7875737703;
 
-    // Call the parent component's onSubmit function with the address data
-    onSubmit(address);
-    naviget("/payment");
-  };
+  // const [personalInfo, setpersonalInfo] = useState({
+  //   firstName: user,
+  //   lastName: "",
+  //   mobile: mobile,
+  // });
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onSubmit(address);
+  //   naviget("/payment");
+  // };
 
   return (
     <div className="order-form">
-      <h2>Enter Your Address</h2>
-      <form onSubmit={handleSubmit}>
+      {/* <h2>Enter Your Address</h2> */}
+      <form>
+        <label>
+          First name :
+          <input
+            className="input"
+            type="text"
+            value={personalInfo.firstName}
+            onChange={(e) =>
+              setpersonalInfo({ ...personalInfo, firstName: e.target.value })
+            }
+            required
+          />
+        </label>
+        <label>
+          Last name :
+          <input
+            type="text"
+            className="input"
+            value={personalInfo.lastName}
+            onChange={(e) =>
+              setpersonalInfo({ ...personalInfo, lastName: e.target.value })
+            }
+            required
+          />
+        </label>
+        <label>
+          Mobile:
+          <input
+            type="text"
+            className="input"
+            value={personalInfo.mobile}
+            onChange={
+              (e) =>
+                setpersonalInfo({ ...personalInfo, mobile: e.target.value }) // Update personalInfo state
+            }
+            required
+          />
+        </label>
+
         <label>
           Street Address:
           <input
             type="text"
+            className="input"
             value={address.StreetAddress}
             onChange={(e) =>
               setAddress({ ...address, StreetAddress: e.target.value })
@@ -41,6 +77,7 @@ const Order = ({ onSubmit, user }) => {
           City:
           <input
             type="text"
+            className="input"
             value={address.City}
             onChange={(e) => setAddress({ ...address, City: e.target.value })}
             required
@@ -50,6 +87,7 @@ const Order = ({ onSubmit, user }) => {
           State:
           <input
             type="text"
+            className="input"
             value={address.State}
             onChange={(e) => setAddress({ ...address, State: e.target.value })}
             required
@@ -59,6 +97,7 @@ const Order = ({ onSubmit, user }) => {
           Zip Code:
           <input
             type="text"
+            className="input"
             value={address.ZipCode}
             onChange={(e) =>
               setAddress({ ...address, ZipCode: e.target.value })
@@ -70,6 +109,7 @@ const Order = ({ onSubmit, user }) => {
           Country:
           <input
             type="text"
+            className="input"
             value={address.Country}
             onChange={(e) =>
               setAddress({ ...address, Country: e.target.value })
@@ -77,9 +117,9 @@ const Order = ({ onSubmit, user }) => {
             required
           />
         </label>
-        <button className="order-submit-button" type="submit">
+        {/* <button className="order-submit-button" type="submit">
           Confirm Order
-        </button>
+        </button> */}
       </form>
     </div>
   );

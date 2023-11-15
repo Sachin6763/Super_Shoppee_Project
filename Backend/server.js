@@ -78,6 +78,8 @@ app.get("/api/addToCart/:ProductID/:UserID", (req, res) => {
   // const CartID = 1; // Assuming CartID is hardcoded as 1 for this example
   const Quantity = 1; // Assuming Quantity is hardcoded as 1 for this example
 
+  // console.log("here");
+
   const query = `INSERT INTO cartdetails (UserID, ProductID, Quantity) VALUES ('${UserID}', ${ProductID}, ${Quantity})`;
 
   connection.query(query, (error, results, fields) => {
@@ -218,19 +220,45 @@ app.post("/api/storeAddress", (req, res) => {
   });
 });
 
-app.get("/api/checkAddress/:UserID", (req, res) => {
+app.get("api/submitPayment/:userID", (req, res) => {
   const { UserID } = req.params;
-  const query = `SELECT COUNT(*) as addressCount FROM useraddresses WHERE UserID='${UserID}'`;
-
+  const query = `delete from cartDetails where UserID = '${UserID}'`;
   connection.query(query, (error, results, fields) => {
     if (error) {
-      console.error("Error executing query: " + error.stack);
-      res
-        .status(500)
-        .json({ error: "Error in Checking for existence of the addresses" });
+      console.log("Error in submitting : " + error.stack);
+      res.status(501).json({ error: "Error in deleting the cartDetails" });
     } else {
-      // If the query is successful, send the count of addresses
-      res.json(results[0].addressCount);
+      res.status(200).json({ message: "Address deleted successfully" });
+    }
+  });
+});
+
+app.get("/api/submitPayment/:userID", (req, res) => {
+  const { userID } = req.params;
+
+  // Check if the userID exists in the users table
+  const checkUserQuery = `SELECT * FROM users WHERE UserID = '${userID}'`;
+  connection.query(checkUserQuery, (error, results, fields) => {
+    if (error || results.length === 0) {
+      // Handle the case where the user with the specified ID does not exist
+      console.log("User not found or error: " + error);
+      res.status(404).json({ error: "User not found" });
+    } else {
+      // Delete records from cartDetails table for the specified userID
+      const deleteQuery = `DELETE FROM cartDetails WHERE UserID = '${userID}'`;
+      connection.query(
+        deleteQuery,
+        (deleteError, deleteResults, deleteFields) => {
+          if (deleteError) {
+            // Handle delete query error
+            console.log("Error in deleting cartDetails: " + deleteError.stack);
+            res.status(500).json({ error: "Error in deleting cartDetails" });
+          } else {
+            // Successfully deleted records
+            res.status(200).json({ message: "Address deleted successfully" });
+          }
+        }
+      );
     }
   });
 });
