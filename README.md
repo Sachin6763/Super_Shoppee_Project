@@ -29,35 +29,35 @@ Before you begin, ensure you have met the following requirements:
 
 2. **Navigate to the project directory:**
 
-   ```cd mern-online-shoppe``````
+   `cd mern-online-shoppe`
 
 3. **Install server dependencies:**
 
    ```cd Backend
-   npm install``
+   npm install
 
    ```
 
 4. **Install client dependencies:**
 
-   ````cd Frontend
-   npm install```
-   ````
+   ```cd Frontend
+   npm install
+   ```
 
 ## Usage
 
 1. **Start the server:**
 
-   ````cd server
-   npm start```
+   ```cd server
+   npm start
 
-   ````
+   ```
 
 2. Start the client:
 
-   ````cd ../client
-   npm start```
+   ```cd Frontend
+   npm start
 
-   ````
+   ```
 
 3. Open your browser and go to http://localhost:3000 to access the MERN Online Shoppe.
