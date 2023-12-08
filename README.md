@@ -1,8 +1,6 @@
 # Super_Shoppee_Project
 
-# MERN Online Shoppe
-
-Welcome to the MERN Online Shoppe! This full-stack web application allows users to browse, search, and purchase products online.
+Welcome to the Online Shoppe! This full-stack web application allows users to browse, search, and purchase products online.
 
 ## Features
 
@@ -30,8 +28,7 @@ Before you begin, ensure you have met the following requirements:
 
 2. **Navigate to the project directory:**
 
-   ```cd mern-online-shoppe
-
+   ```cd Super_Shoppe_Project
    ```
 
 3. **Install server dependencies:**
