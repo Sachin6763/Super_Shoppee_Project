@@ -3,6 +3,9 @@ const mysql = require("mysql2");
 const path = require("path");
 const cors = require("cors"); // Import CORS middleware
 
+// const bodyParser = require("body-parser");
+// app.use(bodyParser.json());
+
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -197,21 +200,14 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/storeAddress", (req, res) => {
-  const { UserID, StreetAddress, City, State, ZipCode, Country, Extra } =
-    req.body;
-  console.log("jere");
-  console.log("s" + req.body);
-
-  // const userId = req.body.UserID; // Assuming UserID is sent in the request
+  const { UserID, StreetAddress, City, State, ZipCode, Country } = req.body;
 
   const sql = `INSERT INTO useraddresses (UserID, StreetAddress, City, State, ZipCode, Country) VALUES (?, ?, ?, ?, ?, ?)`;
   const values = [UserID, StreetAddress, City, State, ZipCode, Country];
 
-  // Insert data into the useraddresses table
   connection.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error storing address in database: ", err);
-      console.log(UserID, StreetAddress, City, State, ZipCode, Country, Extra);
       res.status(500).json({ error: "Internal Server Error" });
     } else {
       console.log("Address stored in database successfully!");
@@ -220,15 +216,32 @@ app.post("/api/storeAddress", (req, res) => {
   });
 });
 
-app.get("api/submitPayment/:userID", (req, res) => {
-  const { UserID } = req.params;
-  const query = `delete from cartDetails where UserID = '${UserID}'`;
+app.post("/api/address", (req, res) => {
+  const { userID } = req.body;
+
+  const query = `SELECT * FROM userAddresses WHERE UserID = '${userID}'`;
+
   connection.query(query, (error, results, fields) => {
     if (error) {
-      console.log("Error in submitting : " + error.stack);
-      res.status(501).json({ error: "Error in deleting the cartDetails" });
+      console.log("Error fetching address: " + error.stack);
+      res.status(500).json({ error: "Error fetching address" });
     } else {
-      res.status(200).json({ message: "Address deleted successfully" });
+      // Check if any data is found
+      if (results.length > 0) {
+        const addressData = {
+          UserID: userID,
+          StreetAddress: results[0].StreetAddress,
+          City: results[0].City,
+          State: results[0].State,
+          ZipCode: results[0].ZipCode,
+          Country: results[0].Country,
+        };
+
+        res.status(200).json(addressData);
+      } else {
+        // If no data found, send an empty response with the userID
+        res.status(200).json({ UserID: userID });
+      }
     }
   });
 });
@@ -236,32 +249,108 @@ app.get("api/submitPayment/:userID", (req, res) => {
 app.get("/api/submitPayment/:userID", (req, res) => {
   const { userID } = req.params;
 
-  // Check if the userID exists in the users table
-  const checkUserQuery = `SELECT * FROM users WHERE UserID = '${userID}'`;
-  connection.query(checkUserQuery, (error, results, fields) => {
-    if (error || results.length === 0) {
-      // Handle the case where the user with the specified ID does not exist
-      console.log("User not found or error: " + error);
-      res.status(404).json({ error: "User not found" });
-    } else {
-      // Delete records from cartDetails table for the specified userID
-      const deleteQuery = `DELETE FROM cartDetails WHERE UserID = '${userID}'`;
-      connection.query(
-        deleteQuery,
-        (deleteError, deleteResults, deleteFields) => {
-          if (deleteError) {
-            // Handle delete query error
-            console.log("Error in deleting cartDetails: " + deleteError.stack);
-            res.status(500).json({ error: "Error in deleting cartDetails" });
-          } else {
-            // Successfully deleted records
-            res.status(200).json({ message: "Address deleted successfully" });
-          }
-        }
-      );
+  // Start a transaction
+  connection.beginTransaction((beginTransactionError) => {
+    if (beginTransactionError) {
+      console.log("Error starting transaction: " + beginTransactionError.stack);
+      return res.status(501).json({ error: "Error starting transaction" });
     }
+
+    // Query to copy data from cartItems to OrderDetails
+    const copyToOrderDetailsQuery = `
+      INSERT INTO OrderDetails (UserID, CartDetailsID, ProductID, Quantity)
+      SELECT '${userID}', 
+             (SELECT CartDetailsID+1 FROM OrderDetails WHERE userID='${userID}' ORDER BY CartDetailsID DESC LIMIT 1),
+             ci.ProductID, ci.Quantity
+      FROM cartDetails ci 
+      WHERE ci.UserID = '${userID}'
+    `;
+    connection.query(
+      copyToOrderDetailsQuery,
+      (copyToOrderDetailsError, copyToOrderDetailsResults) => {
+        if (copyToOrderDetailsError) {
+          return connection.rollback(() => {
+            console.log(
+              "Error copying data to OrderDetails: " +
+                copyToOrderDetailsError.stack
+            );
+            res
+              .status(501)
+              .json({ error: "Error copying data to OrderDetails" });
+          });
+        }
+
+        // Query to delete from cartDetails
+        const deleteCartDetailsQuery = `DELETE FROM cartDetails WHERE UserID = '${userID}'`;
+        connection.query(
+          deleteCartDetailsQuery,
+          (deleteCartDetailsError, deleteDetailsResults) => {
+            if (deleteCartDetailsError) {
+              return connection.rollback(() => {
+                console.log(
+                  "Error in deleting cartDetails: " +
+                    deleteCartDetailsError.stack
+                );
+                res
+                  .status(501)
+                  .json({ error: "Error in deleting the cartDetails" });
+              });
+            }
+
+            // Commit the transaction
+            connection.commit((commitError) => {
+              if (commitError) {
+                return connection.rollback(() => {
+                  console.log(
+                    "Error committing transaction: " + commitError.stack
+                  );
+                  res
+                    .status(501)
+                    .json({ error: "Error committing transaction" });
+                });
+              }
+
+              // Transaction successful
+              res.status(200).json({
+                message: "Data copied and cartDetails deleted successfully",
+              });
+            });
+          }
+        );
+      }
+    );
   });
 });
+
+// app.get("/api/submitPayment/:userID", (req, res) => {
+//   const { userID } = req.params;
+
+//   // Check if the userID exists in the users table
+//   const checkUserQuery = `SELECT * FROM users WHERE UserID = '${userID}'`;
+//   connection.query(checkUserQuery, (error, results, fields) => {
+//     if (error || results.length === 0) {
+//       // Handle the case where the user with the specified ID does not exist
+//       console.log("User not found or error: " + error);
+//       res.status(404).json({ error: "User not found" });
+//     } else {
+//       // Delete records from cartDetails table for the specified userID
+//       const deleteQuery = `DELETE FROM cartDetails WHERE UserID = '${userID}'`;
+//       connection.query(
+//         deleteQuery,
+//         (deleteError, deleteResults, deleteFields) => {
+//           if (deleteError) {
+//             // Handle delete query error
+//             console.log("Error in deleting cartDetails: " + deleteError.stack);
+//             res.status(500).json({ error: "Error in deleting cartDetails" });
+//           } else {
+//             // Successfully deleted records
+//             res.status(200).json({ message: "Address deleted successfully" });
+//           }
+//         }
+//       );
+//     }
+//   });
+// });
 
 app.get("*", (req, res) => {
   // Serve the React app's index.html from the root public folder

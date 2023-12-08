@@ -7,8 +7,8 @@ const UPIPaymentForm = ({
   user,
   address,
   setAddress,
-  userInfo,
-  setpersonalInfo,
+  personalInfo,
+  setPersonalInfo,
   cartItems,
   setcartItems,
 }) => {
@@ -42,9 +42,9 @@ const UPIPaymentForm = ({
         address.State +
         address.Zipcode +
         address.Country +
-        userInfo.firstName +
-        userInfo.lastName +
-        userInfo.Mobile +
+        personalInfo.firstName +
+        personalInfo.lastName +
+        personalInfo.Mobile +
         cartItems
     );
     if (
@@ -55,9 +55,9 @@ const UPIPaymentForm = ({
       // address.State &&
       // // address.Zipcode &&
       // address.Country &&
-      // userInfo.firstName &&
-      // userInfo.lastName &&
-      // // userInfo.Mobile &&
+      // personalInfo.firstName &&
+      // personalInfo.lastName &&
+      // // personalInfo.Mobile &&
       // cartItems
     ) {
       // Process payment with the valid UPI ID
@@ -65,15 +65,38 @@ const UPIPaymentForm = ({
       setsuccess(true);
       setMessage("Payment done successfully !");
 
-      setAddress({
-        UserID: "",
-        StreetAddress: "",
-        City: "",
-        State: "",
-        ZipCode: "",
-        Country: "",
-      });
-      setpersonalInfo({
+      fetch("http://localhost:4000/api/storeAddress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(address), // Send addressData instead of the entire 'address' object
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // Handle the response as needed
+
+          // Optionally, you can reset the address state after storing
+          setAddress({
+            UserID: user, // If you want to include UserID
+            StreetAddress: "",
+            City: "",
+            State: "",
+            ZipCode: "",
+            Country: "",
+          });
+        })
+        .catch((error) => console.error("Error storing address: ", error));
+
+      // setAddress({
+      //   // UserID: "",
+      //   StreetAddress: "",
+      //   City: "",
+      //   State: "",
+      //   ZipCode: "",
+      //   Country: "",
+      // });
+      setPersonalInfo({
         firstName: "",
         lastName: "",
         mobile: "",
@@ -137,11 +160,11 @@ const UPIPaymentForm = ({
             !address.State ||
             // address.Zipcode &&
             !address.Country ||
-            !userInfo.firstName ||
-            !userInfo.lastName ||
-            !userInfo.mobile
+            !personalInfo.firstName ||
+            !personalInfo.lastName ||
+            !personalInfo.mobile
           }
-          // userInfo.Mobile &&
+          // personalInfo.Mobile &&
           cartItems
         >
           Pay via UPI

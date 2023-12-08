@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import "../Css/Order.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
 
-const Order = ({ address, setAddress, personalInfo, setpersonalInfo }) => {
+const Order = ({ address, setAddress, personalInfo, setPersonalInfo }) => {
   // const naviget = useNavigate();
 
-  // let mobile = 7875737703;
+  let mobile = 7875737703;
 
   // const [personalInfo, setpersonalInfo] = useState({
   //   firstName: user,
@@ -30,7 +30,7 @@ const Order = ({ address, setAddress, personalInfo, setpersonalInfo }) => {
             type="text"
             value={personalInfo.firstName}
             onChange={(e) =>
-              setpersonalInfo({ ...personalInfo, firstName: e.target.value })
+              setPersonalInfo({ ...personalInfo, firstName: e.target.value })
             }
             required
           />
@@ -42,7 +42,7 @@ const Order = ({ address, setAddress, personalInfo, setpersonalInfo }) => {
             className="input"
             value={personalInfo.lastName}
             onChange={(e) =>
-              setpersonalInfo({ ...personalInfo, lastName: e.target.value })
+              setPersonalInfo({ ...personalInfo, lastName: e.target.value })
             }
             required
           />
@@ -55,7 +55,7 @@ const Order = ({ address, setAddress, personalInfo, setpersonalInfo }) => {
             value={personalInfo.mobile}
             onChange={
               (e) =>
-                setpersonalInfo({ ...personalInfo, mobile: e.target.value }) // Update personalInfo state
+                setPersonalInfo({ ...personalInfo, mobile: e.target.value }) // Update personalInfo state
             }
             required
           />

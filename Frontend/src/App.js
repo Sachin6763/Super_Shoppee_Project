@@ -91,15 +91,15 @@ export default function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("executed");
+    // console.log("executed");
     fetch("http://localhost:4000/api/products")
       .then((response) => response.json())
       .then((data) => {
         setProducts(data);
-        console.log(products);
+        // console.log(products);
       })
       .catch((error) => console.error("Error fetching products: ", error));
-  }, [products]);
+  }, []);
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -110,10 +110,10 @@ export default function App() {
       .then((data) => {
         // console.log("here" + data);
         setCartItems(data);
-        console.log(cartItems.length + "1");
+        // console.log(cartItems.length + "1");
       })
       .catch((error) => console.log("Error fetching products : ", error));
-  }, [cartItems]);
+  }, []);
 
   const addToCart = (product, flag) => {
     // Make a request to addToCart API endpoint with the ProductID
