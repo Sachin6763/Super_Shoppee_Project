@@ -25,11 +25,15 @@ Before you begin, ensure you have met the following requirements:
 
    ```git clone https://github.com/Sachin6763/Super_Shoppee_Project.git
 
+
+
    ```
 
 2. **Navigate to the project directory:**
 
-   `cd mern-online-shoppe`
+   ```cd mern-online-shoppe
+
+   ```
 
 3. **Install server dependencies:**
 
@@ -49,7 +53,7 @@ Before you begin, ensure you have met the following requirements:
 1. **Start the server:**
 
    ```cd server
-   npm start
+   nodemon server.js
 
    ```
 
